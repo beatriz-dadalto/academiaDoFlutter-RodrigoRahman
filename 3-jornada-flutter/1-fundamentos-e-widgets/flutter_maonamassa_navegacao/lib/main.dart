@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_maonamassa_navegacao/core/navigator_observer_custom.dart';
+import 'package:flutter_maonamassa_navegacao/pages/detail2_page.dart';
 import 'package:flutter_maonamassa_navegacao/pages/detail_page.dart';
 import 'package:flutter_maonamassa_navegacao/pages/home_page.dart';
 
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
           );
         }
         return null;
+      },
+      routes: {
+        Detail2Page.routeName: (_) => const Detail2Page(),
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_maonamassa_navegacao/pages/detail2_page.dart';
 import 'package:flutter_maonamassa_navegacao/pages/detail_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -34,6 +35,14 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: const Text('Ir para página Detalhe pelo nome da página'),
+            ),
+            TextButton(
+              onPressed: () async {
+                var message = await Navigator.of(context)
+                    .pushNamed(Detail2Page.routeName);
+                print('Mensagem recebida da página: $message');
+              },
+              child: const Text('Ir para Detalhe2 e aguarda'),
             ),
           ],
         ),
