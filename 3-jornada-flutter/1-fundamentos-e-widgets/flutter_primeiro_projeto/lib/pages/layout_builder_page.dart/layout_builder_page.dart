@@ -5,10 +5,6 @@ class LayoutBuilderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final statusBar = mediaQuery.padding.top;
-    final heightBody = mediaQuery.size.height - statusBar - kToolbarHeight;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Layout Builder'),
