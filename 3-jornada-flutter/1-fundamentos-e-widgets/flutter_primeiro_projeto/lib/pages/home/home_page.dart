@@ -81,10 +81,76 @@ class HomePage extends StatelessWidget {
                 ),
               ];
             },
-          )
+          ),
         ],
       ),
-      body: Container(),
+      body: Theme(
+        data: Theme.of(context).copyWith(
+          primaryColor: Colors.blueGrey,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.pink,
+            ),
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Botão X'),
+              ),
+              const ContainerCustom(),
+              Container(
+                height: 150.0,
+                width: 150.0,
+                color: Theme.of(context).primaryColor,
+                child: const Center(
+                  child: Text(
+                    'Pegou o tema Raiz da main',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              // contextInterno eh o carregado dessa pagina em Theme.of(), nao eh o da raiz/pai
+              Builder(
+                builder: (contextInterno) {
+                  return Container(
+                    height: 150.0,
+                    width: 150.0,
+                    color: Theme.of(contextInterno).primaryColor,
+                    child: const Center(
+                      child: Text('Container do Builder'),
+                    ),
+                  );
+                },
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text('Cor do contexto raiz/pai/main'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ContainerCustom extends StatelessWidget {
+  const ContainerCustom({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150.0,
+      width: 150.0,
+      color: Theme.of(context).primaryColor,
+      child: const Center(
+        child: Text('ContainerCustom'),
+      ),
     );
   }
 }

@@ -12,11 +12,13 @@ import 'package:flutter_primeiro_projeto/pages/scrolls/listview_page.dart';
 import 'package:flutter_primeiro_projeto/pages/scrolls/singlechildscrollview_page.dart';
 
 void main() {
-  runApp(DevicePreview(
-    // kReleaseMode: true para testar telas de dispositivos diferentes.
-    enabled: !kReleaseMode,
-    builder: (_) => const MyApp(), // Wrap your app
-  ));
+  runApp(
+    DevicePreview(
+      // kReleaseMode: true para testar telas de dispositivos diferentes.
+      enabled: !kReleaseMode,
+      builder: (_) => const MyApp(), // Wrap your app
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -31,8 +33,20 @@ class MyApp extends StatelessWidget {
       locale: DevicePreview.locale(context),
       builder: DevicePreview.appBuilder,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primaryColor: Colors.black,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         useMaterial3: true,
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.deepOrange,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.pink,
+          ),
+        ),
       ),
       routes: {
         '/': (_) => const HomePage(),
