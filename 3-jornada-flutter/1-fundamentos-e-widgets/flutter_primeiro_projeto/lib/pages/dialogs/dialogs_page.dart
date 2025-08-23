@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_primeiro_projeto/pages/dialogs/dialog_custom.dart';
 
@@ -55,29 +58,55 @@ class DialogsPage extends StatelessWidget {
                 await showDialog(
                   context: context,
                   builder: (context) {
-                    return AlertDialog(
-                      title: const Text('Alert Dialog'),
-                      content: const SingleChildScrollView(
-                        child: ListBody(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Text('Deseja realmente salvar?'),
-                            ),
-                          ],
+                    if (Platform.isIOS) {
+                      return CupertinoAlertDialog(
+                        title: const Text('Alert Dialog'),
+                        content: const SingleChildScrollView(
+                          child: ListBody(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Text('Deseja realmente salvar?'),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text('Cancelar'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: const Text('Confirmar'),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return AlertDialog(
+                        title: const Text('Alert Dialog'),
+                        content: const SingleChildScrollView(
+                          child: ListBody(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Text('Deseja realmente salvar?'),
+                              ),
+                            ],
+                          ),
                         ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text('Confirmar'),
-                        ),
-                      ],
-                    );
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: const Text('Confirmar'),
+                          ),
+                        ],
+                      );
+                    }
                   },
                 );
               },
@@ -85,11 +114,24 @@ class DialogsPage extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                final selectedTime = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay.now(),
-                );
-                print('O horário selecionado foi $selectedTime');
+                if (Platform.isIOS) {
+                  showBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return CupertinoTimerPicker(
+                        onTimerDurationChanged: (value) {
+                          
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  final selectedTime = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  print('O horário selecionado foi $selectedTime');
+                }
               },
               child: const Text('Time Picker'),
             ),
@@ -109,7 +151,7 @@ class DialogsPage extends StatelessWidget {
               onPressed: () {
                 showAboutDialog(
                   context: context,
-                  applicationIcon: Icon(Icons.flutter_dash),
+                  applicationIcon: const Icon(Icons.flutter_dash),
                 );
               },
               child: const Text('About Dialog'),

@@ -11,7 +11,7 @@ class MediaQueryPage extends StatelessWidget {
     // será feito pelo LayoutBuilder para maior precisão)
     final statusBar = mediaQuery.padding.top;
     final bottomSafeArea = mediaQuery.padding.bottom;
-    final appBarHeight = kToolbarHeight; // kToolbarHeight é o padrão para AppBar
+    const appBarHeight = kToolbarHeight; // kToolbarHeight é o padrão para AppBar
 
     print('--- Informações do MediaQuery ---');
     print('Largura Total da Tela: ${mediaQuery.size.width}');

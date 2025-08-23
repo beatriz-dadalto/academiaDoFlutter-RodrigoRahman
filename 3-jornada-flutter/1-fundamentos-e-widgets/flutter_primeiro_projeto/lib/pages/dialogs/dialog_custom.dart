@@ -1,12 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DialogCustom extends Dialog {
-  DialogCustom(BuildContext context)
+  DialogCustom(BuildContext context, {super.key})
       : super(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.0),
           ),
-          child: Container(
+          child: SizedBox(
             height: 300.0,
             width: 300.0,
             child: Column(

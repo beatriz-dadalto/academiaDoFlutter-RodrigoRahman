@@ -103,7 +103,7 @@ class BotoesRotacaoTextoPage extends StatelessWidget {
             GestureDetector(
               child: const Text('Gesture Detector'),
               onTap: () => print('Gesture Clicado'),
-              onVerticalDragStart: (_) => print('Gesture Movimentado $_'),
+              onVerticalDragStart: (_) => print('Gesture Movimentado'),
             ),
             const SizedBox(
               height: 10,
