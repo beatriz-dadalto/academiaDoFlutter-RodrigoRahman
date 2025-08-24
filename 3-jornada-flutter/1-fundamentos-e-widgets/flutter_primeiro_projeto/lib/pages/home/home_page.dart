@@ -10,6 +10,7 @@ enum PopupMenuPages {
   scrollsListView,
   dialogs,
   snackbars,
+  forms,
 }
 
 class HomePage extends StatelessWidget {
@@ -46,6 +47,8 @@ class HomePage extends StatelessWidget {
                   Navigator.of(context).pushNamed('/dialogs/dialogs_page');
                 case PopupMenuPages.snackbars:
                   Navigator.of(context).pushNamed('/snackbars');
+                  case PopupMenuPages.forms:
+                  Navigator.of(context).pushNamed('/forms');
               }
             },
             itemBuilder: (BuildContext context) {
@@ -85,6 +88,10 @@ class HomePage extends StatelessWidget {
                 const PopupMenuItem<PopupMenuPages>(
                   value: PopupMenuPages.snackbars,
                   child: Text('SnackBars'),
+                ),
+                const PopupMenuItem<PopupMenuPages>(
+                  value: PopupMenuPages.forms,
+                  child: Text('Forms'),
                 ),
               ];
             },
