@@ -41,7 +41,7 @@ class _ImcSetStatePageState extends State<ValueNotiferPage> {
     print('BUILD TELA');
     return Scaffold(
       appBar: AppBar(
-        title: const Text('IMC SetState'),
+        title: const Text('IMC Value Notifier'),
       ),
       body: SingleChildScrollView(
         child: Form(
