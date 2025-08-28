@@ -12,7 +12,11 @@ class DatabaseSQLite {
 
     openDatabase(
       databaseFinalPath,
-      version: 1,
+      version: 2,
+      onConfigure: (db) async {
+        print('--onConfigure sendo chamado--');
+        await db.execute('PRAGMA foreign_keys = ON');
+      },
       //chamado somente na primeira vez que carrega o app
       onCreate: (Database db, int version) {
         print('onCreate aqui...');
@@ -24,15 +28,65 @@ class DatabaseSQLite {
             nome varchar(200)
           )
         ''');
+
+        batch.execute('''
+          CREATE TABLE produto(
+            id Integer primary key autoincrement,
+            nome varchar(200)
+          )
+          ''');
+
+        // batch.execute('''
+        //   CREATE TABLE categoria(
+        //     id Integer primary key autoincrement,
+        //     nome varchar(200)
+        //   )
+        //   ''');
+
         batch.commit();
       },
       //chamado smepre que houver uma alteracao no version incremental (1 -> 2)
       onUpgrade: (db, oldVersion, newVersion) {
         print('onUpdate aqui...');
+        final batch = db.batch();
+
+        if (oldVersion == 1) {
+          batch.execute('''
+          CREATE TABLE produto(
+            id Integer primary key autoincrement,
+            nome varchar(200)
+          )
+          ''');
+
+          // batch.execute('''
+          // CREATE TABLE categoria(
+          //   id Integer primary key autoincrement,
+          //   nome varchar(200)
+          // )
+          // ''');
+        }
+
+        // if (oldVersion == 2) {
+        //   batch.execute('''
+        //   CREATE TABLE categoria(
+        //     id Integer primary key autoincrement,
+        //     nome varchar(200)
+        //   )
+        //   ''');
+        // }
+
+        batch.commit();
       },
       //chamado sempre que houver uma alteracao no version decremental (2 -> 1)
       onDowngrade: (db, oldVersion, newVersion) {
         print('onDowngrade aqui...');
+        final batch = db.batch();
+
+        if (oldVersion == 3) {
+          batch.execute(''' 
+            drop table categoria
+          ''');
+        }
       },
     );
   }
