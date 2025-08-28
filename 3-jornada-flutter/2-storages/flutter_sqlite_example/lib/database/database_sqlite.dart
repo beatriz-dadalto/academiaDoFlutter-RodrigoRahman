@@ -3,14 +3,14 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class DatabaseSQLite {
-  Future<void> openConnection() async {
+  Future<Database> openConnection() async {
     final databasePath = await getDatabasesPath();
     final databaseFinalPath = join(databasePath, 'SQLITE_EXAMPLE');
 
     print(databasePath);
     print(databaseFinalPath);
 
-    openDatabase(
+     return await openDatabase(
       databaseFinalPath,
       version: 2,
       onConfigure: (db) async {
@@ -83,7 +83,7 @@ class DatabaseSQLite {
         final batch = db.batch();
 
         if (oldVersion == 3) {
-          batch.execute(''' 
+          batch.execute('''
             drop table categoria
           ''');
         }
