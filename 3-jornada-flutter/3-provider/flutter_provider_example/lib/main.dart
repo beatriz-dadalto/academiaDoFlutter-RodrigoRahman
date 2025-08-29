@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_provider_example/change_notifier/change_notifier_page.dart';
+import 'package:flutter_provider_example/change_notifier/provider_controller.dart';
 import 'package:flutter_provider_example/provider/provider_page.dart';
 import 'package:flutter_provider_example/provider/user_model.dart';
 import 'package:provider/provider.dart';
@@ -11,15 +13,20 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (context) {
-        return UserModel(
-          name: 'Sabrina Carpenter',
-          imgAvatar:
-              'https://tmjbrazil.com.br/wp-content/uploads/2025/02/Sabrina-Carpenter-conta-como-comecou-a-carreira-de-cantora.png',
-          birthDate: '11/05/1999',
-        );
-      },
+    return MultiProvider(
+      providers: [
+        Provider(
+          create: (_) {
+            return UserModel(
+              name: 'Sabrina Carpenter',
+              imgAvatar:
+                  'https://tmjbrazil.com.br/wp-content/uploads/2025/02/Sabrina-Carpenter-conta-como-comecou-a-carreira-de-cantora.png',
+              birthDate: '11/05/1999',
+            );
+          },
+        ),
+        ChangeNotifierProvider(create: (_) => ProviderController(),),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
@@ -28,6 +35,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/provider': (_) => ProviderPage(),
+          '/change': (_) => ChangeNotifierPage(),
         },
         home: Builder(
           builder: (context) {
@@ -43,7 +51,9 @@ class MyApp extends StatelessWidget {
                       child: Text('Provider'),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/change');
+                      },
                       child: Text('Change Notifier '),
                     ),
                   ],
