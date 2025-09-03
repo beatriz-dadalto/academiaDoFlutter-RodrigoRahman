@@ -10,6 +10,17 @@ class BlocExample extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Bloc Example')),
       body: BlocListener<ExampleBloc, ExampleState>(
+        listenWhen: (previous, current) {
+          if (previous is ExampleStateInitial && current is ExampleStateData) {
+            if (current.names.length > 3) {
+              print(
+                '--listeWhen-- rebuildou porque names.length é maior que 3',
+              );
+              return true;
+            }
+          }
+          return false;
+        },
         listener: (context, state) {
           //executa aqui apenas quando o estado muda.
           print('-----Estado foi alterado!----BlocListener');
@@ -32,7 +43,9 @@ class BlocExample extends StatelessWidget {
               },
               builder: (_, state) {
                 if (state is ExampleStateData) {
-                  return Text('BlocConsumer | Total de nomes é ${state.names.length}');
+                  return Text(
+                    'BlocConsumer | Total de nomes é ${state.names.length}',
+                  );
                 }
                 return const SizedBox.shrink();
               },
@@ -53,7 +66,7 @@ class BlocExample extends StatelessWidget {
                 return const SizedBox.shrink();
               },
             ),
-            SizedBox(height: 24.0,),
+            SizedBox(height: 24.0),
             Text('Bloc Selector'),
             BlocSelector<ExampleBloc, ExampleState, List<String>>(
               selector: (state) {
