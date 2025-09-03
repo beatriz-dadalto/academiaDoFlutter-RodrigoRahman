@@ -22,6 +22,7 @@ class ExampleBloc extends Bloc<ExampleEvent, ExampleState> {
       'Dart',
       'Flutter Bloc',
     ];
+    await Future.delayed(Duration(seconds: 4));
     emit(ExampleStateData(names: names));
   }
 }
