@@ -194,7 +194,7 @@ packages:
     source: hosted
     version: "3.1.1"
   dartion:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: dartion
       sha256: "472c43f23f6e3bfcf883d5662f1d2b503d6e9c8044533119b49d27463007c871"
