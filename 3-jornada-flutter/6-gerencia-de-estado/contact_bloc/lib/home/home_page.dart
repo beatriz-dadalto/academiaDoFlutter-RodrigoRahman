@@ -33,7 +33,9 @@ class HomePage extends StatelessWidget {
                 },
                 label: 'Example Freezed',
               ),
-              _buttonCard(context: context, onTap: () {}, label: 'Contact'),
+              _buttonCard(context: context, onTap: () {
+                Navigator.of(context).pushNamed('/contacts/list');
+              }, label: 'Contact'),
               _buttonCard(
                 context: context,
                 onTap: () {},

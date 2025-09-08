@@ -1,11 +1,11 @@
 import 'package:contact_bloc/models/contact_model.dart';
 import 'package:dio/dio.dart';
 
-class ContactsRepositories {
+class ContactsRepository {
   final baseUrl = 'http://10.0.2.2:3031';
   late final Dio _dio;
 
-  ContactsRepositories() {
+  ContactsRepository() {
     _dio = Dio();
   }
 
@@ -14,7 +14,7 @@ class ContactsRepositories {
       final response = await _dio.get('$baseUrl/contacts');
 
       return (response.data as List)
-          .map((contact) => ContactModel.fromJson(contact))
+          .map((contact) => ContactModel.fromMap(contact))
           .toList();
     } on DioError catch (e) {
       throw Exception('Erro ${e.message}');
