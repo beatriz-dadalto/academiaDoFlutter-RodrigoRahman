@@ -1,14 +1,118 @@
+import 'package:contact_bloc/features/contacts/register/bloc/contact_register_bloc.dart';
+import 'package:contact_bloc/widgets/loader.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ContactRegisterPage extends StatelessWidget {
+class ContactRegisterPage extends StatefulWidget {
+  const ContactRegisterPage({super.key});
 
-  const ContactRegisterPage({ super.key });
+  @override
+  State<ContactRegisterPage> createState() => _ContactRegisterPageState();
+}
 
-   @override
-   Widget build(BuildContext context) {
-       return Scaffold(
-           appBar: AppBar(title: const Text('Register'),),
-           body: Container(),
-       );
+class _ContactRegisterPageState extends State<ContactRegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+      ),
+      body: BlocListener<ContactRegisterBloc, ContactRegisterState>(
+        // listenwhen: use quando tem muitos estados ai vc poe para atualizar apenas no state necessario e evita alguns processamentos desnecessarios
+        listenWhen: (previous, current) {
+          return current.maybeWhen(
+            success: () => true,
+            error: (_) => true,
+            orElse: () => false,);
+        },
+        listener: (context, state) {
+          state.whenOrNull(
+            success: () {
+              Navigator.of(context).pop();
+            },
+            error: (message) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    message,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    label: Text('Nome'),
+                  ),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Nome é obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    label: Text('Email'),
+                  ),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Email é obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final validate = _formKey.currentState?.validate() ?? false;
+                    if (validate) {
+                      context.read<ContactRegisterBloc>().add(
+                        ContactRegisterEvent.save(
+                          name: _nameController.text,
+                          email: _emailController.text,
+                        ),
+                      );
+                    }
+                  },
+                  child: Text('SALVAR'),
+                ),
+                Loader<ContactRegisterBloc, ContactRegisterState>(
+                  selector: (state) {
+                    return state.maybeWhen(
+                      loading: () => true,
+                      orElse: () => false,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

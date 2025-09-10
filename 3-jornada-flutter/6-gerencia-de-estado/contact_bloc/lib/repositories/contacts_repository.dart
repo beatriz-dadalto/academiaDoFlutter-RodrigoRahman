@@ -2,7 +2,7 @@ import 'package:contact_bloc/models/contact_model.dart';
 import 'package:dio/dio.dart';
 
 class ContactsRepository {
-  final baseUrl = 'http://10.0.2.2:3031';
+  final baseUrl = 'http://10.0.2.2:3000';
   late final Dio _dio;
 
   ContactsRepository() {
