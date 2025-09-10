@@ -1,9 +1,1 @@
-{
-   "contacts": [
-    {
-      "id": "asdfghjklchave",
-      "name": "Beatriz Dadalto",
-      "email": "bd@test.com"
-    }
-   ]
-}
+{"contacts":[{"id":"asdfghjklchave","name":"Beatriz Dadalto","email":"bd@test.com"},{"id":"1","name":"Lord Tesouro","email":"lord_tesouro@email.com","createdAt":"2025-09-09T22:34:45.326666"},{"id":"3","name":"anny caroline","email":"anny@email.com","createdAt":"2025-09-09T23:06:32.600569"},{"id":"4","name":"Lindos e Lindas","email":"lindaselindas@email.com","createdAt":"2025-09-09T23:14:20.918971"},{"id":"5","name":"teste loading","email":"teste_loading@email.com","createdAt":"2025-09-09T23:25:46.221302"},{"id":"6","name":"bia finalizando o teste","email":"bia@email.com","createdAt":"2025-09-09T23:49:11.839125"},{"id":"7","name":"ultimo","email":"ultimo@email.com","createdAt":"2025-09-09T23:49:36.765482"}]}
