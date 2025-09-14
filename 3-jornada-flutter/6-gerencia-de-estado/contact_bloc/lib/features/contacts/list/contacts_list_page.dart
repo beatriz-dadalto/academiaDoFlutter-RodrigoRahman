@@ -14,13 +14,22 @@ class ContactsListPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Navigator.pushNamed(context, '/contacts/register');
-          context.read<ContactListBloc>().add(const ContactListEvent.findAll());
+          if (context.mounted) {
+            context.read<ContactListBloc>().add(
+              const ContactListEvent.findAll(),
+            );
+          }
         },
         child: const Icon(Icons.add),
       ),
       body: BlocListener<ContactListBloc, ContactListState>(
         listenWhen: (previous, current) {
-          return current.maybeWhen(error: (error) => true, orElse: () => false);
+          return current.maybeWhen(
+            error: (error) => true,
+            deleteSuccess: (deletedContact, contacts) =>
+                true, // ✅ Escutar sucesso
+            orElse: () => false,
+          );
         },
         listener: (context, state) {
           state.whenOrNull(
@@ -29,6 +38,32 @@ class ContactsListPage extends StatelessWidget {
                 SnackBar(
                   content: Text(error, style: TextStyle(color: Colors.white)),
                   backgroundColor: Colors.red,
+                ),
+              );
+              context.read<ContactListBloc>().add(ContactListEvent.findAll());
+            },
+            deleteSuccess: (deletedContact, contacts) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Contato ${deletedContact.name} foi excluído',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                  backgroundColor: Colors.green,
+                  duration: Duration(seconds: 4),
+                  action: SnackBarAction(
+                    label: 'Desfazer',
+                    onPressed: () async {
+                      context.read<ContactListBloc>().add(
+                        ContactListEvent.restore(contact: deletedContact),
+                      );
+                    },
+                    backgroundColor: Colors.white,
+                    textColor: Colors.black,
+                  ),
                 ),
               );
             },
@@ -59,6 +94,8 @@ class ContactsListPage extends StatelessWidget {
                       selector: (state) {
                         return state.maybeWhen(
                           data: (contacts) => contacts,
+                          deleteSuccess: (deletedContact, contacts) =>
+                              contacts, // ✅ Usar contacts do deleteSuccess
                           orElse: () => [],
                         );
                       },
@@ -72,19 +109,62 @@ class ContactsListPage extends StatelessWidget {
                             itemCount: contacts.length,
                             itemBuilder: (context, index) {
                               final contact = contacts[index];
-                              return ListTile(
-                                onTap: () async {
-                                  await Navigator.pushNamed(
-                                    context,
-                                    '/contacts/update',
-                                    arguments: contact,
-                                  );
+                              return Dismissible(
+                                key: Key(contact.id ?? ''),
+                                direction: DismissDirection.endToStart,
+                                background: Container(
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.only(right: 20.0),
+                                  color: Colors.red,
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ),
+                                ),
+                                confirmDismiss: (direction) async {
+                                  return await showDialog<bool>(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text(
+                                            'Deseja excluir ${contact.name}?',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.of(
+                                                context,
+                                              ).pop(false),
+                                              child: Text('Cancelar'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => Navigator.of(
+                                                context,
+                                              ).pop(true),
+                                              style: TextButton.styleFrom(
+                                                foregroundColor: Colors.red,
+                                              ),
+                                              child: Text('Excluir'),
+                                            ),
+                                          ],
+                                        ),
+                                      ) ??
+                                      false;
+                                },
+                                onDismissed: (direction) {
+                                  // ✅ Apenas dispara o evento - BlocListener cuida do resto
                                   context.read<ContactListBloc>().add(
-                                    ContactListEvent.findAll(),
+                                    ContactListEvent.delete(
+                                      contact: contact,
+                                    ),
                                   );
                                 },
-                                title: Text(contact.name),
-                                subtitle: Text(contact.email),
+                                child: ListTile(
+                                  onTap: () async {
+                                    await _navigateToUpdate(context, contact);
+                                  },
+                                  title: Text(contact.name),
+                                  subtitle: Text(contact.email),
+                                ),
                               );
                             },
                           ),
@@ -99,5 +179,24 @@ class ContactsListPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _navigateToUpdate(
+    BuildContext context,
+    ContactModel contact,
+  ) async {
+    final bloc = context.read<ContactListBloc>();
+
+    await Navigator.pushNamed(
+      context,
+      '/contacts/update',
+      arguments: contact,
+    );
+
+    if (context.mounted) {
+      bloc.add(
+        ContactListEvent.findAll(),
+      );
+    }
   }
 }
