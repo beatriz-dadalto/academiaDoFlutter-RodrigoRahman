@@ -3,5 +3,7 @@ part of 'contact_list_bloc.dart';
 @freezed
 class ContactListEvent with _$ContactListEvent {
   const factory ContactListEvent.findAll() = _ContactListEventFindAll;
+  const factory ContactListEvent.delete({required ContactModel contact}) = _ContactListEventDelete;
+  const factory ContactListEvent.restore({required ContactModel contact}) = _ContactListEventRestore;
 
 }

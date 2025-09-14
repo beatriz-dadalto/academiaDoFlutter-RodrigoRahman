@@ -49,9 +49,37 @@ class ContactsRepository {
     }
   }
 
-  Future<void> delete(ContactModel model) async {
+  Future<void> deleteById(String id) async {
     try {
-      await _dio.delete('$baseUrl/contacts/${model.id}');
+      await _dio.delete('$baseUrl/contacts/$id');
+    } on DioError catch (e) {
+      final message = switch (e.type) {
+        DioErrorType.connectTimeout => 'Timeout de conexão',
+        DioErrorType.sendTimeout => 'Timeout no envio',
+        DioErrorType.receiveTimeout => 'Timeout na resposta',
+        DioErrorType.response => 'Erro ${e.response?.statusCode}',
+        DioErrorType.cancel => 'Requisição cancelada',
+        _ => 'Erro de rede: ${e.message}',
+      };
+      throw Exception(message);
+    } catch (e) {
+      throw Exception('Erro inesperado: $e');
+    }
+  }
+
+  Future<void> restore(ContactModel contact) async {
+    try {
+      await _dio.post('$baseUrl/contacts', data: contact.toMap());
+    } on DioError catch (e) {
+      final message = switch (e.type) {
+        DioErrorType.connectTimeout => 'Timeout de conexão',
+        DioErrorType.sendTimeout => 'Timeout no envio',
+        DioErrorType.receiveTimeout => 'Timeout na resposta',
+        DioErrorType.response => 'Erro ${e.response?.statusCode}',
+        DioErrorType.cancel => 'Requisição cancelada',
+        _ => 'Erro de rede: ${e.message}',
+      };
+      throw Exception(message);
     } catch (e) {
       throw Exception('Erro inesperado: $e');
     }
