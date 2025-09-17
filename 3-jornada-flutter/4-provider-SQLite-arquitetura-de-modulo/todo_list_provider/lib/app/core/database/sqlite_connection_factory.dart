@@ -1,6 +1,7 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:todo_list_provider/app/core/database/sqlite_migration_factory.dart';
 
 class SqliteConnectionFactory {
   static SqliteConnectionFactory? _instance;
@@ -8,7 +9,8 @@ class SqliteConnectionFactory {
   static const _DATABASE_NAME = 'TODO_LIST_PROVIDER';
 
   Database? _db;
-  final _lock = Lock(); // Lock() -> para trabalhar com multi threads. Garante que apenas uma thread por vez possa abrir a conexão (evita problemas de concorrência).
+  final _lock =
+      Lock(); // Lock() -> para trabalhar com multi threads. Garante que apenas uma thread por vez possa abrir a conexão (evita problemas de concorrência).
 
   SqliteConnectionFactory._();
 
@@ -48,7 +50,23 @@ class SqliteConnectionFactory {
     await db.execute('PRAGMA foreign_keys = ON');
   }
 
-  Future<void> _onCreate(Database db, int version) async {}
-  Future<void> _onUpgrade(Database db, int oldVersion, int version) async {}
+  Future<void> _onCreate(Database db, int version) async {
+    final batch = db.batch();
+    final migrations = SqliteMigrationFactory().getCreateMigration();
+    for (var migration in migrations) {
+      migration.create(batch);
+    }
+    batch.commit();
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int version) async {
+    final batch = db.batch();
+    final migrations = SqliteMigrationFactory().getUpgradeMigration(oldVersion);
+    for (var migration in migrations) {
+      migration.upgrade(batch);
+    }
+    batch.commit();
+  }
+
   Future<void> _onDowngrade(Database db, int oldVersion, int version) async {}
 }
