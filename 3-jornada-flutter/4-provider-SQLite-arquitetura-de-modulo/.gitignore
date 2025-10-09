@@ -51,3 +51,6 @@ web/firebase-config.js
 
 # Firebase options (contém chaves de API)
 lib/firebase_options.dart
+
+# Ignore the todo_list_provider module folder (local module)
+todo_list_provider/
