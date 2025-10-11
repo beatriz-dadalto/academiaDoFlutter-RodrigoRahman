@@ -1,38 +1,34 @@
-import 'package:flutter/material.dart';
+import 'package:todo_list_provider/app/core/notifier/default_change_notifier.dart';
 import 'package:todo_list_provider/app/exceptions/auth_exception.dart';
 import 'package:todo_list_provider/app/services/user/user_service.dart';
 
-class RegisterController extends ChangeNotifier {
+class RegisterController extends DefaultChangeNotifier {
   final UserService _userService;
-  String? error;
-  bool success = false;
 
   RegisterController({required UserService userService})
     : _userService = userService;
 
   void registerUser(String email, String password) async {
     try {
-      error = null;
-      success = false;
-      notifyListeners();
+      clearState();
+      showLoading();
+      notifyListeners(); // Notifica estado inicial: loading=true
+
       final user = await _userService.register(email, password);
       if (user != null) {
-        success = true;
-        error = null;
+        showSuccess();
       } else {
-        error = 'Erro ao registrar usuário';
-        success = false;
+        showError('Erro ao registrar usuário');
       }
     } on AuthException catch (e) {
-      error = e.message;
-      success = false;
+      showError(e.message);
     } catch (e) {
       // Catch unexpected errors (platform/channel/pigeon decoding issues)
       // so the UI can display a message instead of the app crashing.
-      error = e.toString();
-      success = false;
+      showError(e.toString());
     } finally {
-      notifyListeners();
+      hideLoading();
+      notifyListeners(); // Notifica fim do loading
     }
   }
 }

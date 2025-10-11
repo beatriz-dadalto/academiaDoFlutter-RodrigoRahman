@@ -18,12 +18,7 @@ class UserRepositoryImpl implements UserRepository {
         password: password,
       );
       return userCredential.user;
-    } on FirebaseAuthException catch (e, s) {
-      log(
-        'FirebaseAuthException: ${e.code} - ${e.message}',
-        error: e,
-        stackTrace: s,
-      );
+    } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         throw AuthException(
           message: 'E-mail já utilizado, por favor escolha outro e-mail',

@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_list_provider/app/core/notifier/default_listener_notifier.dart';
 import 'package:todo_list_provider/app/core/ui/theme_extensions.dart';
 import 'package:todo_list_provider/app/core/validators/validators.dart';
 import 'package:todo_list_provider/app/core/widget/todo_list_field.dart';
@@ -21,49 +22,49 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
-  late RegisterController _controller;
-  VoidCallback? _controllerListener;
+  DefaultListenerNotifier? _defaultListener;
+  bool _listenerInitialized = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
-    if (_controllerListener != null) {
-      _controller.removeListener(_controllerListener!);
-    }
+    _defaultListener?.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    // Listener will be added in didChangeDependencies where the
-    // BuildContext has access to the provider instances.
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Ensure controller is obtained from a context that has the provider.
-    _controller = context.read<RegisterController>();
-    // If we've already attached a listener, remove it first.
-    if (_controllerListener != null) {
-      _controller.removeListener(_controllerListener!);
+
+    // Only initialize listener once
+    if (!_listenerInitialized) {
+      _listenerInitialized = true;
+
+      // Dispose any existing listener first
+      _defaultListener?.dispose();
+
+      _defaultListener = DefaultListenerNotifier(
+        changeNotifier: context.read<RegisterController>(),
+      );
+
+      _defaultListener!.listener(
+        context: context,
+        successCallback: (notifier, listenerInstance) {
+          listenerInstance.dispose();
+          Navigator.of(context).pop();
+        },
+        errorCallback: (notifier, listenerInstance) {
+          // Error callback - SnackBar já é mostrado automaticamente
+        },
+      );
     }
-    _controllerListener = () {
-      final controller = _controller;
-      final success = controller.success;
-      final error = controller.error;
-      if (success) {
-        Navigator.of(context).pop();
-      } else if (error != null && error.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error), backgroundColor: Colors.red),
-        );
-      }
-    };
-    _controller.addListener(_controllerListener!);
   }
 
   @override
