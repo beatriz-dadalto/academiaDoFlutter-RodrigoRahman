@@ -48,9 +48,7 @@ app.*.map.json
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 web/firebase-config.js
+firebase.json
 
 # Firebase options (contém chaves de API)
 lib/firebase_options.dart
-
-# Ignore the todo_list_provider module folder (local module)
-todo_list_provider/

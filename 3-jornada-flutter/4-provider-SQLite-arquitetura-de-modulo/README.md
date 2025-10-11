@@ -6,7 +6,7 @@ Hands-on Provider e SQLite em arquitetura de modulo
 
 ## Local Firebase configuration (important for public repos)
 
-This repository intentionally does NOT track `lib/firebase_options.dart` (it contains Firebase client keys).
+This repository intentionally does NOT track `lib/firebase_options.dart`.
 If you're cloning this project, follow these steps to configure Firebase locally:
 
 1. Open the Firebase Console: https://console.firebase.google.com
