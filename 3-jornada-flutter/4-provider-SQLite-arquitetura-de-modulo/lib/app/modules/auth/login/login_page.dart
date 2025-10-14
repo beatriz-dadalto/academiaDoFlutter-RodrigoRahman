@@ -1,10 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_list_provider/app/core/notifier/default_listener_notifier.dart';
 import 'package:todo_list_provider/app/core/widget/todo_list_field.dart';
 import 'package:todo_list_provider/app/core/widget/todo_list_logo.dart';
+import 'package:todo_list_provider/app/modules/auth/login/login_controller.dart';
+import 'package:validatorless/validatorless.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    DefaultListenerNotifier(
+      changeNotifier: context.read<LoginController>(),
+    ).listener(
+      context: context,
+      successCallback: (notifier, listenerInstance) {
+        print('Login efetuado  com sucesso!');
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +46,7 @@ class LoginPage extends StatelessWidget {
               child: IntrinsicHeight(
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: 10,
-                    ),
+                    SizedBox(height: 10),
                     TodoListLogo(),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -30,21 +54,31 @@ class LoginPage extends StatelessWidget {
                         vertical: 20,
                       ),
                       child: Form(
+                        key: _formKey,
                         child: Column(
                           children: [
                             TodoListField(
+                              controller: _emailController,
+                              validator: Validatorless.multiple([
+                                Validatorless.required('E-mail obrigatório'),
+                                Validatorless.email('E-mail inválido'),
+                              ]),
                               label: 'E-mail',
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
+                            SizedBox(height: 20),
                             TodoListField(
+                              controller: _passwordController,
+                              validator: Validatorless.multiple([
+                                Validatorless.required('Senha obrigatória'),
+                                Validatorless.min(
+                                  6,
+                                  'Senha deve conter pelo menos 6 caracteres',
+                                ),
+                              ]),
                               label: 'Senha',
                               obscureText: true,
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
+                            SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -53,7 +87,21 @@ class LoginPage extends StatelessWidget {
                                   child: Text('Esqueceu sua senha'),
                                 ),
                                 ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    final isFormValid =
+                                        _formKey.currentState?.validate() ??
+                                        false;
+
+                                    if (isFormValid) {
+                                      final email = _emailController.text;
+                                      final password = _passwordController.text;
+
+                                      context.read<LoginController>().login(
+                                        email: email,
+                                        password: password,
+                                      );
+                                    }
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
@@ -70,9 +118,7 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 20),
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
@@ -86,9 +132,7 @@ class LoginPage extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            SizedBox(
-                              height: 30,
-                            ),
+                            SizedBox(height: 30),
                             SignInButton(
                               Buttons.Google,
                               onPressed: () {},

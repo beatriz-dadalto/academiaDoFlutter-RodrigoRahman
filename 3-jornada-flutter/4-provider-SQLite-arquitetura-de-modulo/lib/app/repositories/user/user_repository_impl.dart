@@ -44,4 +44,41 @@ class UserRepositoryImpl implements UserRepository {
       throw AuthException(message: 'Erro ao registrar usuário: $e');
     }
   }
+
+  @override
+  Future<User?> login(String email, String password) async {
+    try {
+      final userCredentials = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return userCredentials.user;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-credential') {
+        throw AuthException(message: 'Login ou senha inválidos');
+      } else if (e.code == 'user-not-found') {
+        throw AuthException(message: 'Usuário não encontrado');
+      } else if (e.code == 'wrong-password') {
+        throw AuthException(message: 'Senha incorreta');
+      } else {
+        throw AuthException(message: e.message ?? 'Erro ao realizar login');
+      }
+    } catch (e, s) {
+      log('Unexpected error during login', error: e, stackTrace: s);
+
+      // Check if user was actually logged in despite the pigeon decode error
+      final currentUser = _firebaseAuth.currentUser;
+      if (currentUser != null && currentUser.email == email) {
+        // User was logged in successfully, return the user despite the platform error
+        log(
+          'User was logged in successfully despite platform error',
+          name: 'UserRepository',
+        );
+        return currentUser;
+      }
+
+      // If no user was logged in, throw the original error
+      throw AuthException(message: 'Erro ao realizar login: $e');
+    }
+  }
 }

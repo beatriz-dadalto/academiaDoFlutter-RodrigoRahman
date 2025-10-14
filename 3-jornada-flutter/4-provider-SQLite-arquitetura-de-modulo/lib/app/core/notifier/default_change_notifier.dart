@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 /// Classe base para todos os controllers da aplicação.
@@ -170,7 +168,6 @@ class DefaultChangeNotifier extends ChangeNotifier {
   /// ```
   void showError(String errorMessage) {
     if (_disposed) return;
-    log('DefaultChangeNotifier.showError chamado: $errorMessage');
     _error = errorMessage;
     _loading = false;
     _success = false;
