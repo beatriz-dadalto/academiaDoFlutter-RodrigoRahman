@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:todo_list_provider/app/exceptions/auth_exception.dart';
 import 'package:todo_list_provider/app/repositories/user/user_repository.dart';
 
@@ -79,6 +80,35 @@ class UserRepositoryImpl implements UserRepository {
 
       // If no user was logged in, throw the original error
       throw AuthException(message: 'Erro ao realizar login: $e');
+    }
+  }
+
+  @override
+  Future<void> forgotPassword(String email) async {
+    try {
+      // ✅ Envia email de recuperação diretamente
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+
+      // Firebase NÃO lança erro se o email não existir (por segurança)
+      // Apenas envia o email se a conta existir
+    } on FirebaseAuthException catch (e) {
+      // Trata erros específicos
+      switch (e.code) {
+        case 'invalid-email':
+          throw AuthException(message: 'E-mail inválido');
+        case 'user-not-found':
+          // Nota: Este erro raramente é retornado por questões de segurança
+          // Firebase prefere não confirmar se o email existe ou não
+          throw AuthException(message: 'Usuário não encontrado');
+        default:
+          throw AuthException(
+            message: 'Erro ao enviar email de recuperação: ${e.message}',
+          );
+      }
+    } on Exception catch (e) {
+      throw AuthException(
+        message: 'Erro inesperado ao enviar email de recuperação',
+      );
     }
   }
 }
