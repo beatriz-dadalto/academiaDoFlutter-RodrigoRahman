@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:todo_list_provider/app/exceptions/auth_exception.dart';
 import 'package:todo_list_provider/app/repositories/user/user_repository.dart';
 
@@ -110,5 +111,57 @@ class UserRepositoryImpl implements UserRepository {
         message: 'Erro inesperado ao enviar email de recuperação',
       );
     }
+  }
+
+  @override
+  Future<User?> googleLogin() async {
+    List<String>? loginMethods;
+
+    try {
+      final googleSingIn = GoogleSignIn();
+      final googleUser = await googleSingIn.signIn();
+      if (googleUser != null) {
+        final loginMethods = await _firebaseAuth.fetchSignInMethodsForEmail(
+          googleUser.email,
+        );
+
+        if (loginMethods.contains('password')) {
+          throw AuthException(
+            message:
+                'Você utilizou um e-mail para cadastro, você pode clicar em recuperar sua senha caso tenha esquecido',
+          );
+        } else {
+          final googleAuth = await googleUser.authentication;
+          final firebaseCredential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
+
+          var userCredential = await _firebaseAuth.signInWithCredential(
+            firebaseCredential,
+          );
+
+          return userCredential.user;
+        }
+      }
+    } on FirebaseAuthException catch (e, s) {
+      print(e);
+      print(s);
+      if (e.code == 'account-exists-with-different-credential') {
+        throw AuthException(
+          message:
+              '''Login inválido! Você se registrou com os seguintes provedores:
+              ${loginMethods!.join(',')}''',
+        );
+      } else {
+        throw AuthException(message: 'Erro ao realizar login');
+      }
+    }
+  }
+
+  @override
+  Future<void> googleLogout() async {
+    await GoogleSignIn().signOut();
+    _firebaseAuth.signOut();
   }
 }
