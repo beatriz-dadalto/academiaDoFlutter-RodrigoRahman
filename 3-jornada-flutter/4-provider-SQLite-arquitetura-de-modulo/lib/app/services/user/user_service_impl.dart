@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:todo_list_provider/app/repositories/user/user_repository.dart';
 import 'package:todo_list_provider/app/services/user/user_service.dart';
 
@@ -25,5 +24,5 @@ class UserServiceImpl implements UserService {
   Future<User?> googleLogin() => _userRepository.googleLogin();
 
   @override
-  Future<void> googleLogout() => _userRepository.googleLogout();
+  Future<void> logout() => _userRepository.logout();
 }

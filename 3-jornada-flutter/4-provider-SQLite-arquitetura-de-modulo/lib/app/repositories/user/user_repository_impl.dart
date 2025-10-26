@@ -156,10 +156,11 @@ class UserRepositoryImpl implements UserRepository {
         throw AuthException(message: 'Erro ao realizar login');
       }
     }
+    return null;
   }
 
   @override
-  Future<void> googleLogout() async {
+  Future<void> logout() async {
     await GoogleSignIn().signOut();
     _firebaseAuth.signOut();
   }
