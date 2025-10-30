@@ -23,32 +23,41 @@ class HomeFilters extends StatelessWidget {
               TodoCardFilter(
                 label: 'HOJE',
                 taskFilter: TaskFilterEnum.today,
-                totalTasksModel: TotalTasksModel(
-                  totalTasks: 3,
-                  totalTasksFinished: 5,
-                ),
-                selected: context.select<HomeController, TaskFilterEnum>(
-                  (value) => value.filterSelected) == TaskFilterEnum.today,
-                ),
+                totalTasksModel: context
+                    .select<HomeController, TotalTasksModel?>(
+                      (controller) => controller.todayTotalTasks,
+                    ),
+                selected:
+                    context.select<HomeController, TaskFilterEnum>(
+                      (value) => value.filterSelected,
+                    ) ==
+                    TaskFilterEnum.today,
+              ),
               TodoCardFilter(
                 label: 'AMANHÃ',
                 taskFilter: TaskFilterEnum.tomorrow,
-                totalTasksModel: TotalTasksModel(
-                  totalTasks: 14,
-                  totalTasksFinished: 9,
-                ),
-                selected: context.select<HomeController, TaskFilterEnum>(
-                  (value) => value.filterSelected) == TaskFilterEnum.tomorrow,
-                ),
+                totalTasksModel: context
+                    .select<HomeController, TotalTasksModel?>(
+                      (controller) => controller.tomorrowTotalTasks,
+                    ),
+                selected:
+                    context.select<HomeController, TaskFilterEnum>(
+                      (value) => value.filterSelected,
+                    ) ==
+                    TaskFilterEnum.tomorrow,
+              ),
               TodoCardFilter(
                 label: 'SEMANA',
                 taskFilter: TaskFilterEnum.week,
-                totalTasksModel: TotalTasksModel(
-                  totalTasks: 6,
-                  totalTasksFinished: 2,
-                ),
-                selected: context.select<HomeController, TaskFilterEnum>(
-                  (value) => value.filterSelected) == TaskFilterEnum.week,
+                totalTasksModel: context
+                    .select<HomeController, TotalTasksModel?>(
+                      (controller) => controller.weekTotalTasks,
+                    ),
+                selected:
+                    context.select<HomeController, TaskFilterEnum>(
+                      (value) => value.filterSelected,
+                    ) ==
+                    TaskFilterEnum.week,
               ),
             ],
           ),
