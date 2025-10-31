@@ -33,6 +33,18 @@ class TaskRepositoryImpl implements TaskRepository {
     ''',
       [startFilter.toIso8601String(), endFilter.toIso8601String()],
     );
-    return result.map((e) => TaskModel.loadFromDB(e),).toList();
+    return result.map((e) => TaskModel.loadFromDB(e)).toList();
+  }
+
+  @override
+  Future<void> checkOrUncheckTask(TaskModel taskModel) async {
+    final conn = await _sqliteConnectionFactory.openConnection();
+    final isFinished = taskModel.finished ? 1 : 0;
+
+    await conn.rawUpdate('''
+      UPDATE todo
+      SET finalizado = ?
+      WHERE id = ?
+    ''', [isFinished, taskModel.id]);
   }
 }

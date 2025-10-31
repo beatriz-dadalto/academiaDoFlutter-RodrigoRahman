@@ -15,6 +15,7 @@ class HomeController extends DefaultChangeNotifier {
   List<TaskModel> filteredTasks = [];
   DateTime? initialDateOfWeek;
   DateTime? selectedDay;
+  bool showFinishedTasks = false;
 
   HomeController({required TaskService taskService})
     : _taskService = taskService;
@@ -88,6 +89,10 @@ class HomeController extends DefaultChangeNotifier {
       selectedDay = null;
     }
 
+    if (!showFinishedTasks) {
+      filteredTasks = filteredTasks.where((task) => !task.finished).toList();
+    }
+
     hideLoading();
     notifyListeners();
   }
@@ -104,5 +109,23 @@ class HomeController extends DefaultChangeNotifier {
     await findtasks(filter: filterSelected);
     await loadTotalTasks();
     notifyListeners();
+  }
+
+  Future<void> checkOrUncheckTask(TaskModel taskModel) async {
+    clearState();
+    showLoading();
+    notifyListeners();
+
+    final taskUpdate = taskModel.copyWith(finished: !taskModel.finished);
+
+    await _taskService.checkOrUncheckTask(taskUpdate);
+
+    hideLoading();
+    refreshPage();
+  }
+
+  void showOrHideFinishedTasks() {
+    showFinishedTasks = !showFinishedTasks;
+    refreshPage();
   }
 }

@@ -37,7 +37,7 @@ class TaskServiceImpl implements TaskService {
     }
 
     endFilter = startFilter.add(Duration(days: 7));
-    
+
     final tasks = await _taskRepository.findByPeriod(startFilter, endFilter);
 
     return WeekTaskModel(
@@ -46,4 +46,8 @@ class TaskServiceImpl implements TaskService {
       tasks: tasks,
     );
   }
+
+  @override
+  Future<void> checkOrUncheckTask(TaskModel taskModel) =>
+      _taskRepository.checkOrUncheckTask(taskModel);
 }
