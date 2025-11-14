@@ -96,7 +96,9 @@ class HomeDrawer extends StatelessWidget {
             title: Text('Alterar nome'),
           ),
           ListTile(
-            onTap: () => context.read<AuthProvider>().logout(),
+            onTap: () {
+              context.read<AuthProvider>().logout();
+            },
             title: Text('Sair'),
           ),
         ],

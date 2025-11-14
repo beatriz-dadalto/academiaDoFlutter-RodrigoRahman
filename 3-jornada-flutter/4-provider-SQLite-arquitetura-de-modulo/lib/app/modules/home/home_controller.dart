@@ -112,20 +112,53 @@ class HomeController extends DefaultChangeNotifier {
   }
 
   Future<void> checkOrUncheckTask(TaskModel taskModel) async {
-    clearState();
-    showLoading();
-    notifyListeners();
+    try {
+      clearState();
+      showLoading();
+      notifyListeners();
 
-    final taskUpdate = taskModel.copyWith(finished: !taskModel.finished);
+      final taskUpdate = taskModel.copyWith(finished: !taskModel.finished);
+      await _taskService.checkOrUncheckTask(taskUpdate);
 
-    await _taskService.checkOrUncheckTask(taskUpdate);
+      hideLoading();
+      showSuccess(
+        taskUpdate.finished
+            ? 'Tarefa concluída!'
+            : 'Tarefa desmarcada como concluída!',
+      );
+      notifyListeners();
 
-    hideLoading();
-    refreshPage();
+      await refreshPage();
+    } catch (e) {
+      hideLoading();
+      showError('Erro ao atualizar a tarefa');
+      notifyListeners();
+    }
   }
 
   void showOrHideFinishedTasks() {
     showFinishedTasks = !showFinishedTasks;
     refreshPage();
+  }
+
+  Future<void> deleteTask(TaskModel taskModel) async {
+    try {
+      clearState();
+      showLoading();
+      notifyListeners();
+
+      await _taskService.delete(taskModel.id);
+
+      hideLoading();
+      showSuccess('Tarefa "${taskModel.description}" excluída com sucesso!');
+      notifyListeners();
+
+      await Future.delayed(Duration(milliseconds: 100));
+      await refreshPage();
+    } catch (e) {
+      hideLoading();
+      showError('Erro ao excluir a tarefa "${taskModel.description}"');
+      notifyListeners();
+    }
   }
 }

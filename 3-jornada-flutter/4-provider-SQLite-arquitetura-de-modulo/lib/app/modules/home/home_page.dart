@@ -22,15 +22,50 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _successMessageShown = false;
+
   @override
   void initState() {
     super.initState();
     // 1. Configura o listener para mostrar/esconder loading
     DefaultListenerNotifier(changeNotifier: widget._homeController).listener(
       context: context,
-      successCallback: (notifier, listenerInstance) =>
-          listenerInstance.dispose(),
+      successCallback: (notifier, listenerInstance) {
+        if (!_successMessageShown) {
+          _successMessageShown = true;
+
+          // Usa a mensagem customizada do controller ou uma genérica
+          final message =
+              notifier.successMessage ?? 'Operação realizada com sucesso!';
+
+          ScaffoldMessenger.of(context)
+              .showSnackBar(
+                SnackBar(
+                  content: Text(message),
+                  backgroundColor: Colors.green,
+                  duration: Duration(seconds: 2),
+                ),
+              )
+              .closed
+              .then((_) {
+                _successMessageShown = false;
+                widget._homeController.clearSuccess();
+              });
+        }
+      },
+      errorCallback: (notifier, listenerInstance) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(notifier.error ?? 'Erro ao realizar operação'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      },
     );
+
+    // // 2. Carrega as tasks iniciais
+    // widget._homeController.loadTotalTasks();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // 2. Inicia o carregamento das tasks

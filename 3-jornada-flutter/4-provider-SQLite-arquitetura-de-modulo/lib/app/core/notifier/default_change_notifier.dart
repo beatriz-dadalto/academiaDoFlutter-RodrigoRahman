@@ -61,6 +61,7 @@ class DefaultChangeNotifier extends ChangeNotifier {
   bool _loading = false;
   String? _error;
   bool _success = false;
+  String? _successMessage;
   bool _disposed = false;
 
   /// Indica se o controller está executando uma operação assíncrona.
@@ -106,6 +107,21 @@ class DefaultChangeNotifier extends ChangeNotifier {
   /// }
   /// ```
   bool get isSuccess => _success;
+
+  /// Mensagem de sucesso customizada.
+  ///
+  /// Retorna `null` se não houver mensagem ou apenas showSuccess() sem parâmetro.
+  /// Use este getter para exibir mensagens personalizadas de sucesso na UI.
+  ///
+  /// **Exemplo:**
+  /// ```dart
+  /// if (controller.isSuccess && controller.successMessage != null) {
+  ///   ScaffoldMessenger.of(context).showSnackBar(
+  ///     SnackBar(content: Text(controller.successMessage!)),
+  ///   );
+  /// }
+  /// ```
+  String? get successMessage => _successMessage;
 
   /// Exibe o estado de loading.
   ///
@@ -176,18 +192,20 @@ class DefaultChangeNotifier extends ChangeNotifier {
   /// Marca a operação como bem-sucedida.
   ///
   /// Automaticamente limpa qualquer erro existente e define success como true.
+  /// Pode aceitar uma mensagem customizada opcional.
   ///
   /// **Importante:** Você deve chamar `notifyListeners()` manualmente após este método.
   ///
   /// **Exemplo:**
   /// ```dart
   /// await repository.save(data);
-  /// showSuccess();
+  /// showSuccess('Dados salvos com sucesso!');
   /// notifyListeners();
   /// ```
-  void showSuccess() {
+  void showSuccess([String? message]) {
     if (_disposed) return;
     _success = true;
+    _successMessage = message;
     _error = null; // Limpa erro quando bem-sucedido
   }
 
@@ -218,11 +236,12 @@ class DefaultChangeNotifier extends ChangeNotifier {
   void clearSuccess() {
     if (_disposed) return;
     _success = false;
+    _successMessage = null;
   }
 
   /// Redefine o controller para o estado inicial.
   ///
-  /// Limpa `erro`, `loading` e `success`. Útil para reset de formulários ou telas.
+  /// Limpa `erro`, `loading`, `success` e `successMessage`. Útil para reset de formulários ou telas.
   ///
   /// **Importante:** Você deve chamar `notifyListeners()` manualmente após este método.
   ///
@@ -239,6 +258,7 @@ class DefaultChangeNotifier extends ChangeNotifier {
     _loading = false;
     _error = null;
     _success = false;
+    _successMessage = null;
   }
 
   @override

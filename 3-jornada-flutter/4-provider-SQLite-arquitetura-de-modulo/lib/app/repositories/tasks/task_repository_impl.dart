@@ -47,4 +47,16 @@ class TaskRepositoryImpl implements TaskRepository {
       WHERE id = ?
     ''', [isFinished, taskModel.id]);
   }
+
+  @override
+  Future<void> cleanTasks() async {
+    final conn = await _sqliteConnectionFactory.openConnection();
+    await conn.delete('todo');
+  }
+
+  @override
+  Future<void> delete(int id) async {
+    final conn = await _sqliteConnectionFactory.openConnection();
+    await conn.delete('todo', where: 'id = ?', whereArgs: [id]);
+  }
 }

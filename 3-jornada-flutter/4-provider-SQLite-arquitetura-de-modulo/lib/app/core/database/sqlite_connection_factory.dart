@@ -26,8 +26,7 @@ class SqliteConnectionFactory {
     var databasePathFinal = join(databasePath, _DATABASE_NAME);
     if (_db == null) {
       await _lock.synchronized(() async {
-        if (_db == null) {
-          _db = await openDatabase(
+        _db ??= await openDatabase(
             databasePathFinal,
             version: _VERSION,
             onConfigure: _onConfigure,
@@ -35,7 +34,6 @@ class SqliteConnectionFactory {
             onUpgrade: _onUpgrade,
             onDowngrade: _onDowngrade,
           );
-        }
       });
     }
     return _db!;

@@ -23,14 +23,14 @@ class TaskCreateController extends DefaultChangeNotifier {
       notifyListeners();
       if (_selectedDate != null) {
         await _taskService.save(_selectedDate!, description);
-        showSuccess();
+        showSuccess('Tarefa "$description" criada com sucesso!');
       } else {
-        showError('Data da task não foi selecionada');
+        showError('Data da tarefa não foi selecionada');
       }
     } catch (e, s) {
       print(e);
       print(s);
-      showError('Erro ao cadastrar task');
+      showError('Erro ao criar a tarefa');
     } finally {
       hideLoading();
       notifyListeners();
