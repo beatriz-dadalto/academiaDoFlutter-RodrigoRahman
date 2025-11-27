@@ -1,3 +1,5 @@
+//INTERFACE PURA COMO NOS CONHECEMOS NO MUNDO POO
+//! NUNCA DEVEM TER METODOS IMPLEMENTADOS
 abstract interface class ProcessadorPagamento {
   void processarPagamento(double valor);
 }
