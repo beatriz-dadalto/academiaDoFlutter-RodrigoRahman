@@ -15,10 +15,10 @@ interface class Notificador {
 // NAO PODE SER entends fora desse arquivo
 class N extends Notificador {}
 
-class N2 implements Notificador {
-  @override
-  void enviarNotificacap(String mensagem) {}
-}
+// class N2 implements Notificador {
+//   @override
+//   void enviarNotificacap(String mensagem) {}
+// }
 
 void main() {
   final n = Notificador();
