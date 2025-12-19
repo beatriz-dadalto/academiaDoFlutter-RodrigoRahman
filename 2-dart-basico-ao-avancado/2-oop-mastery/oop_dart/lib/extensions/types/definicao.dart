@@ -24,5 +24,5 @@ extension type Celsius(double valor) implements double {
 void main() {
   final temperatura = Celsius(25.0);
 
-  final List<double> temperaturas = [30.0, 15.5, temperatura.valor];
+  final List<double> temperaturas = [30.0, 15.5, temperatura];
 }
