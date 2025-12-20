@@ -22,7 +22,7 @@ void main() {
     if (nome != null) nome!,
   ];
 
-  // com Null Aware Element: verifica se é null
+  // com Null Aware Element: se é null não adiciona
   var listaNomes3 = <String>['Anny', 'Bia', 'Coração', 'Delicadeza', ?nome];
 
   print('listaNome3: $listaNomes3');
