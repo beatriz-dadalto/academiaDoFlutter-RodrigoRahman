@@ -9,6 +9,8 @@ nós tratamos e mostramos mensagem para o usuário.
 2. Errors: são erros FATAIS inesperados em sua grande maioria.
 dificil de se recuperar, pode parar la no servidor
 
+! Usa-se Crashlitcs e Sentry para receber logs de erros do celular do usuário
+
 */
 
 class UsuarioInvalidoException implements Exception {}
@@ -41,19 +43,29 @@ void funcao3() {
 
 void main() {
   try {
-    autenticar('Beatriz Dadalto', '123');
+    autenticar('Beatriz Dadaltos', '123');
+  } on UsuarioInvalidoException catch (error, stackTrace) {
+    //! o catch no tratamento especifico é opcional
+    print('Usuário inválido');
+    print(stackTrace);
+    print(error);
+  } on SenhaInvalidaException {
+    print('Senha inválida');
+  } on Exception {
+    print('Erro de exception');
   } catch (error, stackTrace) {
-    //! esse não é o jeito certo de tratar erro específico
-    switch (error) {
-      case UsuarioInvalidoException():
-        print('Usuário inválido');
-      case SenhaInvalidaException():
-        print('Senha inválida');
-      case _:
-        print('Erro inesperado');
-    }
+    //! esse switch (error) não é o jeito certo de tratar erro específico
+    // switch (error) {
+    //   case UsuarioInvalidoException():
+    //     print('Usuário inválido');
+    //   case SenhaInvalidaException():
+    //     print('Senha inválida');
+    //   case _:
+    //     print('Erro inesperado');
+    // }
 
     print(stackTrace); //! stackTrace se lê debaixo pra cima
     print(error);
+    print('Erro inesperado');
   }
 }
