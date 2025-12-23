@@ -43,7 +43,7 @@ void funcao3() {
 
 void main() {
   try {
-    autenticar('Beatriz Dadaltos', '123');
+    autenticar('Beatriz Dadalto', 'ADF');
   } on UsuarioInvalidoException catch (error, stackTrace) {
     //! o catch no tratamento especifico é opcional
     print('Usuário inválido');
@@ -67,5 +67,12 @@ void main() {
     print(stackTrace); //! stackTrace se lê debaixo pra cima
     print(error);
     print('Erro inesperado');
+  } finally {
+    //! finally sempre é executado independente se deu sucesso ou erro até aqui
+    fecharDB();
   }
+}
+
+void fecharDB() {
+  print('Fechando o banco de dados');
 }
