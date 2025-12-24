@@ -42,10 +42,10 @@ void listaNomesNullChecked(List<String?> nomes) {
   }
 }
 
-//! Não recomendado porque estoura exception. no lugar use ?
+//! Não recomendado porque estoura exception. no lugar de ! use ?
 void nullAssert(List<String?> row) {
   switch (row) {
-    case ['user', final name!]:
+    case ['user', final name!]: // exception se vier null por causa do !
       print('nome usuário: $name');
     case _:
       print('No match');

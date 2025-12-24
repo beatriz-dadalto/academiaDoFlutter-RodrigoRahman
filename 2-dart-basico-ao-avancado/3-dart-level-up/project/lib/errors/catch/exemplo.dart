@@ -30,7 +30,12 @@ void autenticar(String usuario, String senha) {
 }
 
 void funcao1() {
-  funcao2();
+  try {
+    funcao2();
+  } on UsuarioInvalidoException {
+    print('Auditoria usuário inválido');
+    rethrow; //! para manter o stackTrace, sem ele perde o rastro neste caso
+  }
 }
 
 void funcao2() {
@@ -43,7 +48,7 @@ void funcao3() {
 
 void main() {
   try {
-    autenticar('Beatriz Dadalto', 'ADF');
+    autenticar('Beatriz Dadalto2', 'ADF');
   } on UsuarioInvalidoException catch (error, stackTrace) {
     //! o catch no tratamento especifico é opcional
     print('Usuário inválido');
