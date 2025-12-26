@@ -33,16 +33,26 @@ Future<void> main() async {
   // toodo valor que chegar vai entrar no await for
   //! Lembre-se: await for vai executar para sempre, até dizer para ela parar com take() ou break
 
-  // vai receber dados enquanto o valor de saida da stream for menor que 10
-  //! take(): valor de entrada | takeWhile()or de saida
+  //! take(): valor de entrada | skip() pula 3 primeiras entradas
   /*
-  takeWhile(): Retorna valores enquanto a condição for verdadeira. Quando a
-  condição fica falsa, para imediatamente.
+  skip(n): Ignora/pula os N primeiros valores e começa a emitir a partir do (N+1)ésimo.
   Quando usar:
-  - Processar valores enquanto uma condição for verdadeira
-  - Exemplo: Ler arquivo até encontrar marca de fim
+  - Ignorar os primeiros N valores
+  - Exemplo: Pular header de arquivo, ignorar primeiras mensagens de teste
   */
-  stream = stream.takeWhile((int numero) => numero < 10);
+  stream = stream.take(5).skip(2);
+
+  /*
+  skipWhile(condition): Ignora valores enquanto a condição for verdadeira.
+  Quando a condição fica falsa, começa a emitir a partir daquele ponto.
+  Quando usar:
+  - Ignorar valores enquanto uma condição for verdadeira
+  - Exemplo: Ignorar logs de inicialização, começar a processar quando pronto
+  */
+  stream = stream.take(5).skipWhile((numero) {
+    print('Numero que chegou na skipWhile $numero');
+    return numero < 5; // ignora quem é menor que 5
+  });
 
   await for (var i in stream) {
     print(i); // a cada 2 segs vai imprimir o novo valor
@@ -52,6 +62,6 @@ Future<void> main() async {
 }
 
 int callback(int value) {
-  print('O valor é $value');
+  print('O valor da callback é $value');
   return (value + 1) * 2;
 }

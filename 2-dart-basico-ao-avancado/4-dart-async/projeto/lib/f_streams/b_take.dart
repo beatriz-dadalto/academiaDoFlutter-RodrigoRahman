@@ -33,8 +33,12 @@ Future<void> main() async {
   // toodo valor que chegar vai entrar no await for
   //! Lembre-se: await for vai executar para sempre, até dizer para ela parar com take() ou break
 
-  // vai receber ate 5 requisições e depois matar essa stream
-  //! take(): valor de entrada | takeWhile() valor de saida
+  /*
+  take(n): Retorna apenas os N primeiros valores do stream e para.
+  Quando usar:
+  - Pegar apenas um número fixo de valores
+  - Exemplo: Mostrar últimas 10 mensagens do chat
+  */
   stream = stream.take(5);
 
   await for (var i in stream) {
