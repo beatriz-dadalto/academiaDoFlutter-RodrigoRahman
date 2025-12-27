@@ -1,5 +1,12 @@
 /*
+Um stream normal só permite um único listen(), MAS
+asBroadcastStream() converte um stream normal em um broadcast stream,
+permitindo múltiplos listeners simultâneos.
 
+Resumo
+Stream normal: 1 listener apenas
+.asBroadcastStream(): Converte para permitir múltiplos listeners
+.broadcast(): Já cria um stream que suporta múltiplos listeners desde o início
 
 */
 
