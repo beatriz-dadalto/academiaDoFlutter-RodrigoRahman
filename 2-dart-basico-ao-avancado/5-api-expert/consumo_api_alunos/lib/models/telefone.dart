@@ -13,6 +13,7 @@ class Telefone {
   */
 
   //! De obj Telefone para Map<String, dynamic>
+  //! Lembre-se: a chave de ser escrita igual, identica a forma como esta na API
   Map<String, dynamic> toMap() {
     return {'ddd': ddd, 'telefone': telefone};
   }
@@ -27,13 +28,11 @@ class Telefone {
   */
 
   // etapa 2 da desserialização
+  //! Lembre-se de fazer validacao porque pode vir null da API
   factory Telefone.fromMap(Map<String, dynamic> map) {
-    return Telefone(ddd: map['ddd'], telefone: map['telefone']);
+    return Telefone(ddd: map['ddd'] ?? 0, telefone: map['telefone'] ?? '');
   }
 
   // etapa 1 da desserialização
-  factory Telefone.fromJson(String json) {
-    final jsonMap = jsonDecode(json);
-    return Telefone.fromMap(jsonMap);
-  }
+  factory Telefone.fromJson(String json) => Telefone.fromMap(jsonDecode(json));
 }

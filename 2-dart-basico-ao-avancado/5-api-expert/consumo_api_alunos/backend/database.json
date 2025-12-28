@@ -78,7 +78,7 @@
       "endereco": {
         "rua": "Rua X",
         "numero": 200,
-        "cep": "0915225222",
+        "CEP": "0915225222",
         "cidade": {
           "id": 1,
           "nome": "Mogi das Cruzes"
@@ -120,7 +120,7 @@
       "endereco": {
         "rua": "Rua X",
         "numero": 200,
-        "cep": "0915225222",
+        "CEP": "0915225222",
         "cidade": {
           "id": 1,
           "nome": "Santo André"

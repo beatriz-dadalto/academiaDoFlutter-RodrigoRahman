@@ -16,21 +16,20 @@ String toJson() => jsonEncode(toMap());
 ```
 
  # Processo de Desserializacao em 2 etapas:
- 
+
 - Primeiro: json para map -> factory Telefone.fromJson()
 - Segundo: de map para obj Telefone -> factory Telefone.fromMap()
 
 ```
   // etapa 2 da desserialização
+  //! Lembre-se de fazer validacao porque pode vir null da API
+  //! Lembre-se: a chave de ser escrita igual, identica da forma como esta na API
   factory Telefone.fromMap(Map<String, dynamic> map) {
-    return Telefone(ddd: map['ddd'], telefone: map['telefone']);
+    return Telefone(ddd: map['ddd'] ?? 0, telefone: map['telefone'] ?? '');
   }
 ```
 
 ```
   // etapa 1 da desserialização
-  factory Telefone.fromJson(String json) {
-    final jsonMap = jsonDecode(json);
-    return Telefone.fromMap(jsonMap);
-  }
+  factory Telefone.fromJson(String json) => Telefone.fromMap(jsonDecode(json));
 ```
