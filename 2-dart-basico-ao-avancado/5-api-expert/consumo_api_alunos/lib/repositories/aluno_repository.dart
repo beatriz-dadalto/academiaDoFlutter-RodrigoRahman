@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:consumo_api_alunos/models/aluno.dart';
 import 'package:http/http.dart' as http;
@@ -9,10 +10,10 @@ class AlunoRepository {
       Uri.parse('http://localhost:8080/alunos'),
     );
 
-    print(alunosResponse.body.toString()); // List<Map<String, dynamic>>
+    print('DEBUG: ${alunosResponse.body}'); // List<Map<String, dynamic>>
 
     final alunosList =
-        jsonDecode(alunosResponse.body) as List<Map<String, dynamic>>;
+        jsonDecode(alunosResponse.body) as List;
 
     final alunos = alunosList
         .map<Aluno>((alunoMap) => Aluno.fromMap(alunoMap))

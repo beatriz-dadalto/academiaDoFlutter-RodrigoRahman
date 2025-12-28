@@ -41,8 +41,8 @@ class Aluno {
 
   factory Aluno.fromMap(Map<String, dynamic> map) {
     return Aluno(
-      id: map['id'],
-      nome: map['nome'],
+      id: map['id'] ?? 0,
+      nome: map['name'] ?? '',
       idade: map['idade'],
       nomeCursos: List<String>.from(map['nomeCursos'] ?? <String>[]),
       cursos:
@@ -55,4 +55,9 @@ class Aluno {
   }
 
   factory Aluno.fromJson(String json) => Aluno.fromMap(jsonDecode(json));
+
+  @override
+  String toString() {
+    return 'Aluno: $nome (id: $id)';
+  }
 }
