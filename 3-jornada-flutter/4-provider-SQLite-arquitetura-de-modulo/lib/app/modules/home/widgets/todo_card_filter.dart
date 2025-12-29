@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:todo_list_provider/app/core/ui/theme_extensions.dart';
 import 'package:todo_list_provider/app/models/task_filter_enum.dart';
 import 'package:todo_list_provider/app/models/total_tasks_model.dart';
@@ -13,12 +12,12 @@ class TodoCardFilter extends StatelessWidget {
   final bool selected;
 
   const TodoCardFilter({
-    Key? key,
+    super.key,
     required this.label,
     required this.taskFilter,
     this.totalTasksModel,
     required this.selected,
-  }) : super(key: key);
+  });
 
   double _getPercentFinished() {
     final total = totalTasksModel?.totalTasks ?? 0;
@@ -51,7 +50,7 @@ class TodoCardFilter extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${totalTasksModel?.totalTasks ?? 0} tasks',
+              '${(totalTasksModel?.totalTasks ?? 0) - (totalTasksModel?.totalTasksFinished ?? 0)} tasks',
               style: context.titleStyle.copyWith(
                 fontSize: 10.0,
                 color: selected ? Colors.white : Colors.grey,
