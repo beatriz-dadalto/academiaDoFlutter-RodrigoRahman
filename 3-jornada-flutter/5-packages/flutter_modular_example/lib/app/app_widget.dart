@@ -6,6 +6,9 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Flutter Modular Example').modular();
+    return MaterialApp(
+      title: 'Flutter Modular Example',
+      debugShowCheckedModeBanner: false,
+    ).modular();
   }
 }
