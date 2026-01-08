@@ -6,7 +6,8 @@ import 'package:flutter_modular_example/app/splash/splash_page.dart';
 
 class AppModule extends Module {
 
-  // Dependencies
+  //! Dependencies
+  // aqui vai dependencia que é compartilhada por todos os modulos
   @override
   List<Bind<Object>> get binds => const [];
 
