@@ -11,7 +11,7 @@ class CategoriaPage extends StatefulWidget {
   State<CategoriaPage> createState() => _CategoriaPageState();
 }
 
-class _CategoriaPageState extends State<CategoriaPage> {
+class _CategoriaPageState extends ModularState<CategoriaPage, CategoriaController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +22,8 @@ class _CategoriaPageState extends State<CategoriaPage> {
             Text(widget.categoria ?? 'Não foi enviado a categoria'),
             TextButton(
               onPressed: () {
-                var controller = Modular.get<CategoriaController>();
+                //! não precisa mais de Modular.get<CategoriaController>() porque foi recuperado com ModularState<CategoriaPage, CategoriaController>
+                //var controller = Modular.get<CategoriaController>();
                 print('Controller hashcode: ${controller.hashCode}');
               },
               child: Text('Get Categoria Controller'),
